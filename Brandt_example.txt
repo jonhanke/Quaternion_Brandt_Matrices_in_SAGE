@@ -1,0 +1,91 @@
+================================================
+Description: Shows how to compute a certain set 
+of Hecke Eigenvalues via Brandt Matrices.
+
+Written by: Jonathan Hanke in Fall 2013
+================================================
+
+sage: version()
+'Sage Version 5.0, Release Date: 2012-05-14'
+
+sage: load "Brandt.sage"
+
+Computing the unique normalized newform of level N=14 via modular symbols:
+--------------------------------------------------------------------------
+sage: MF14 = ModularForms(2*7); MF14
+Modular Forms space of dimension 4 for Congruence Subgroup Gamma0(14) of weight 2 over Rational Field
+sage: MF14.prec(20)
+20
+sage: MF14_new = MF14.newforms(); MF14_new
+[q - q^2 - 2*q^3 + q^4 + 2*q^6 + q^7 - q^8 + q^9 - 2*q^12 - 4*q^13 - q^14 + q^16 + 6*q^17 - q^18 + 2*q^19 + O(q^20)]
+
+
+
+Computing the same newform's p-th Hecke eigenvalues via the Jacquet-Langlands correspondence with D=2 and M=7:
+--------------------------------------------------------------------------------------------------------------
+sage: B = QuaternionAlgebraWithLevelStructure(QQ, -1, -1, 7); B.discriminant()
+2
+sage: B.level()
+7
+sage: [B.brandt_matrix_by_explicit_action(p)  for p in [2,3,5,7,11,13,17,19,23]]
+We only stored integral elements of norm <= 11, now computing to 11.
+We only stored integral elements of norm <= 12, now computing to 13.
+We only stored integral elements of norm <= 14, now computing to 17.
+We only stored integral elements of norm <= 18, now computing to 19.
+We only stored integral elements of norm <= 20, now computing to 23.
+[
+[0 1]  [1 3]  [3 3]  [4 3]  [6 6]  [5 9]  [12  6]  [11  9]  [12 12]
+[1 0], [3 1], [3 3], [3 4], [6 6], [9 5], [ 6 12], [ 9 11], [12 12]
+]
+
+sage: B.brandt_matrix_by_explicit_action(3).eigenvectors_right()
+[(4, [
+(1, 1)
+], 1), (-2, [
+(1, -1)
+], 1)]
+sage: B.brandt_matrix_by_explicit_action(5).eigenvectors_right()
+[(6, [
+(1, 1)
+], 1), (0, [
+(1, -1)
+], 1)]
+sage: B.brandt_matrix_by_explicit_action(7).eigenvectors_right()
+[(7, [
+(1, 1)
+], 1), (1, [
+(1, -1)
+], 1)]
+sage: B.brandt_matrix_by_explicit_action(11).eigenvectors_right()
+[(12, [
+(1, 1)
+], 1), (0, [
+(1, -1)
+], 1)]
+sage: B.brandt_matrix_by_explicit_action(13).eigenvectors_right()
+[(14, [
+(1, 1)
+], 1), (-4, [
+(1, -1)
+], 1)]
+
+=================================================================================================
+
+Comments:
+---------
+1) Note that here the quaternionic "Eisenstein series" comes from the Brandt eigenspace spanned by (1,1), 
+and the cusp form comes from the Brandt eigenspace spanned by (1, -1).  I hope this example is helpful. =)
+
+2) There is some problem with the maximal order finding routine in Sage-5.0 (and possibly later) 
+for definite quaternion algebras over QQ of prime discriminant p = 1 (mod 4) > 0. Please regard all 
+such computations as untrustworthy until you have checked them! (You have been warned!) =)
+
+Example:
+--------
+sage: A = QuaternionAlgebra(QQ, -5, -7); A.discriminant()
+5
+sage: A.maximal_order()
+Order of Quaternion Algebra (-5, -7) with base ring Rational Field with basis (1/2 + 1/2*j + 1/2*k, 1/4*i + 1/2*j + 1/4*k, j, k)
+sage: A.maximal_order().basis()[1]**2
+-17/4
+
